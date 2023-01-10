@@ -1,6 +1,11 @@
-### Corporate Connections
+# Corporate Connections
 
-Build an API for looking up corporate connections using the Companies House api.
+This is a skeleton of a Play Framework app intended for use as a Scala learning project.
+
+The task is to build an API to find all the co-officers of a given company officer (i.e. people that have been officers of any of the companies that our person of interest has been an officer for).
+
+This gives Scala learners an opportunity to build something with a real-world application in the investigative journalism space.
+
 
 #### Companies House API
 E.g. for officerId `aEdQfmEjiBuB7tLwOP_Wfg-JA-8`, this curl request returns their companies:
@@ -11,7 +16,7 @@ And for companyNumber `03114488`, this curl request returns its officers:
 
 `curl -XGET -u <api-key>: https://api.company-information.service.gov.uk/company/03114488/officers`
 
-[API Docs](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference).
+For more details, see the [Companies House API Docs](https://developer-specs.company-information.service.gov.uk/companies-house-public-data-api/reference).
 
 #### Running the webserver
 Use the API_KEY environment variable to set the Companies House api key:
