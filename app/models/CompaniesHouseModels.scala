@@ -1,17 +1,39 @@
 package models
 
+import io.circe._, io.circe.generic.semiauto._
+
 case class AppointedTo(company_name: String, company_number: String, company_status: String)
 case class Appointment(officer_role: String, appointed_to: AppointedTo)
 case class OfficerAppointmentResponse(items: List[Appointment])
 
-object OfficerAppointmentResponse {
-  // JSON decoding? See https://circe.github.io/circe/codecs/semiauto-derivation.html
+object AppointedTo {
+  implicit val appointedToDecoder = deriveDecoder[AppointedTo]
 }
 
+object Appointment {
+  implicit val appointmentDecoder = deriveDecoder[Appointment]
+}
+
+object OfficerAppointmentResponse {
+  implicit val officerAppointmentResponseDecoder: Decoder[OfficerAppointmentResponse] =
+    deriveDecoder[OfficerAppointmentResponse]
+}
 
 case class Officer(name: String, officer_role: String)
 case class CompanyOfficersResponse(items: List[Officer])
 
+object Officer {
+  implicit val officerDecoder = deriveDecoder[Officer]
+  implicit val officerEncoder = deriveEncoder[Officer]
+}
+
 object CompanyOfficersResponse {
-  // JSON decoding? See https://circe.github.io/circe/codecs/semiauto-derivation.html
+  implicit val companyOfficersResponseDecoder = deriveDecoder[CompanyOfficersResponse]
+  implicit val companyOfficersResponseEncoder = deriveEncoder[CompanyOfficersResponse]
+}
+
+case class ConnectionsResponse(items: Map[String, List[Officer]])
+
+object ConnectionsResponse {
+  implicit val connectionsResponseEncoder = deriveEncoder[ConnectionsResponse]
 }
