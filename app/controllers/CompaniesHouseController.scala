@@ -14,22 +14,30 @@ class CompaniesHouseController(
 )(implicit ec: ExecutionContext) extends
     AbstractController(components)
     with Circe {
+
+  def maybeResult[T](e: Future[Either[String, T]])(f: T => Result): Future[Result] = {
+    e.map {
+      case Right(res) => f(res)
+      case Left(err) => InternalServerError(err)
+    }
+  }
+
   def getAppointmentsProxy(officerId: String) = Action.async {
-    service.fetchAppointmentsProxy(officerId).map { res => Ok(res) }
+    maybeResult(service.fetchAppointmentsProxy(officerId))(Ok(_))
   }
 
   def getAppointments(officerId: String) = Action.async {
-    service.fetchAppointments(officerId).map { res =>
+    maybeResult(service.fetchAppointments(officerId)) { res =>
       Ok(res.items.map(_.appointed_to.company_number).asJson)
     }
   }
 
   def getOfficers(companyNumber: String) = Action.async {
-    service.fetchOfficers(companyNumber).map(r => Ok(r.asJson))
+    maybeResult(service.fetchOfficers(companyNumber))(r => Ok(r.asJson))
   }
 
   def getConnections(officerId: String) = Action.async {
-    service.fetchConnections(officerId).map { r =>
+    maybeResult(service.fetchConnections(officerId)) { r =>
       Ok(r.items.flatMap(_._2).map(_.name).toSet.asJson)
     }
   }
