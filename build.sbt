@@ -1,4 +1,4 @@
-scalaVersion := "2.13.10"
+scalaVersion := "2.13.12"
 
 enablePlugins(PlayScala)
 
@@ -9,5 +9,6 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
-  "com.dripower" %% "play-circe" % "2814.1"
+  "com.dripower" %% "play-circe" % "2814.1",
+  "org.typelevel" %% "cats-core" % "2.10.0"
 )

@@ -7,6 +7,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.libs.circe.Circe
 
 import io.circe.syntax._
+import cats.data.EitherT
 
 class CompaniesHouseController(
   components: ControllerComponents,
@@ -15,8 +16,8 @@ class CompaniesHouseController(
     AbstractController(components)
     with Circe {
 
-  def maybeResult[T](e: Future[Either[String, T]])(f: T => Result): Future[Result] = {
-    e.map {
+  def maybeResult[T](e: EitherT[Future, String, T])(f: T => Result): Future[Result] = {
+    e.value.map {
       case Right(res) => f(res)
       case Left(err) => InternalServerError(err)
     }
