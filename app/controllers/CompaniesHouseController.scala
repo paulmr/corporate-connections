@@ -17,10 +17,11 @@ class CompaniesHouseController(
     with Circe {
 
   def maybeResult[T](e: EitherT[Future, String, T])(f: T => Result): Future[Result] = {
-    e.value.map {
-      case Right(res) => f(res)
-      case Left(err) => InternalServerError(err)
-    }
+    // here we are converting each side of the Either into a "Result"
+    // which can be returned from the HTTP Request. The error we
+    // convert into a result using InternalServerError() and the non
+    // error side, type T, we convert with the provided callback `f`.
+    e.bimap(err => InternalServerError(err), f).merge
   }
 
   def getAppointmentsProxy(officerId: String) = Action.async {
